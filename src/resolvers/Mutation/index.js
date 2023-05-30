@@ -17,6 +17,9 @@ import updateAccountAddressBookEntry from "./updateAccountAddressBookEntry.js";
 import updateAccountGroup from "./updateAccountGroup.js";
 import updateAdminUIAccess from "./updateAdminUIAccess.js";
 import updateGroupsForAccounts from "./updateGroupsForAccounts.js";
+import sendResetPasswordOTP from "../../util/sendResetPasswordOTP.js";
+import updatePasswordWithOTP from "./updatePasswordWithOTP.js";
+
 
 export default {
   addAccountAddressBookEntry,
@@ -37,5 +40,26 @@ export default {
   updateAccountAddressBookEntry,
   updateAccountGroup,
   updateAdminUIAccess,
-  updateGroupsForAccounts
+  updateGroupsForAccounts,
+  async ResetPasswordWithOTP(_, { email }, context) {
+    // console.log(email)
+    const {
+      collections: { users },
+    } = context;
+    const UserData = await users.findOne({ "emails.address": email })
+    if (!UserData) {
+      // The user document does not exist, throw an error or handle it as needed
+      throw new ReactionError("not-found", "Account not found");
+    }
+    // console.log("User Response :- ", UserData._id)
+    const data = await sendResetPasswordOTP(context, email, UserData._id);
+    // console.log("Data: ", data)
+    if (data) {
+      return true
+    } else {
+      return false
+    }
+  },
+  updatePasswordWithOTP,
+
 };

@@ -1,0 +1,12 @@
+extend type Mutation {
+  ResetPasswordWithOTP(email: String!): Boolean
+  updatePasswordWithOTP(
+    otp: String!
+    newPassword: String!
+    email: String!
+  ): Boolean
+}
+
+extend type Query {
+  verifyOtp(otp: String!, email: String!): Boolean
+}
