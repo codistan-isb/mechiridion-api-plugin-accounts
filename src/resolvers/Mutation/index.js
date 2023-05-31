@@ -20,6 +20,7 @@ import updateGroupsForAccounts from "./updateGroupsForAccounts.js";
 import sendResetPasswordOTP from "../../util/sendResetPasswordOTP.js";
 import updatePasswordWithOTP from "./updatePasswordWithOTP.js";
 import ReactionError from "@reactioncommerce/reaction-error";
+import verifyOtp from "./verifyOtp.js";
 
 
 export default {
@@ -62,5 +63,5 @@ export default {
     }
   },
   updatePasswordWithOTP,
-
+  verifyOtp
 };
