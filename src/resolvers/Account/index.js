@@ -4,6 +4,7 @@ import { encodeAccountOpaqueId } from "../../xforms/id.js";
 import addressBook from "./addressBook.js";
 import adminUIShops from "./adminUIShops.js";
 import groups from "./groups.js";
+import StripeUserInfo from "./StripeUserInfo.js";
 
 export default {
   _id: (account) => encodeAccountOpaqueId(account._id),
@@ -28,4 +29,5 @@ export default {
     return (primaryRecord && primaryRecord.address) || "";
   },
   username: (account) => account.profile.username || account.username,
+  StripeUserInfo,
 };

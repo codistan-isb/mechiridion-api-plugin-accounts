@@ -21,13 +21,14 @@ export default async function accounts(context, input) {
     selector.$or = [
       {
         groups: {
-          $in: groupIds
-        }
-      }, {
+          $in: groupIds,
+        },
+      },
+      {
         groups: {
-          $in: [null, []]
-        }
-      }
+          $in: [null, []],
+        },
+      },
     ];
   } else if (groupIds) {
     selector.groups = { $in: groupIds };

@@ -17,5 +17,5 @@ export default {
   groupsByAccount,
   groupsById,
   invitations,
-  userAccount
+  userAccount,
 };

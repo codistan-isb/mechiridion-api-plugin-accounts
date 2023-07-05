@@ -5,8 +5,7 @@ extend type Mutation {
     newPassword: String!
     email: String!
   ): Boolean!
-    verifyOtp(otp: String!, email: String!): Boolean!
-
+  verifyOtp(otp: String!, email: String!): Boolean!
 }
 
 # extend type Query {

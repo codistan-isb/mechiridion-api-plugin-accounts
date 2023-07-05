@@ -13,5 +13,5 @@ export default {
   group,
   groups,
   invitations,
-  viewer
+  viewer,
 };
