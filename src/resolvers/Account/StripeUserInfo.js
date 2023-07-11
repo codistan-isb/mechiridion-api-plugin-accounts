@@ -24,6 +24,7 @@ export default async function StripeUserInfo(account, connectionArgs, context) {
       planName: StripeProductsResponse?.planName,
       active: StripeProductsResponse?.active || StripePlansResponse?.active,
       currency: StripePlansResponse?.currency,
+      subscriptionDate: StripeSubscriptionResponse?.createdAt,
     };
   }
 }
