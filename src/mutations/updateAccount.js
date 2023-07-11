@@ -101,14 +101,24 @@ export default async function updateAccount(context, input) {
     { projection: { userId: 1 } }
   );
   if (!account) throw new ReactionError("not-found", "No account found");
-
-  await context.validatePermissions(
-    `reaction:legacy:accounts:${accountId}`,
-    "update",
-    {
-      owner: account.userId,
-    }
-  );
+  if (providedAccountId) {
+    await context.validatePermissions(`reaction:legacy:accounts`, "create");
+  } else {
+    await context.validatePermissions(
+      `reaction:legacy:accounts:${accountId}`,
+      "update",
+      {
+        owner: account.userId,
+      }
+    );
+  }
+  // await context.validatePermissions(
+  //   `reaction:legacy:accounts:${accountId}`,
+  //   "update",
+  //   {
+  //     owner: account.userId,
+  //   }
+  // );
 
   const updates = {};
   const updatedFields = [];
