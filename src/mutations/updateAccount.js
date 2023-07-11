@@ -6,44 +6,53 @@ import { Account } from "../simpleSchemas.js";
 const inputSchema = new SimpleSchema({
   accountId: {
     type: String,
-    optional: true
+    optional: true,
   },
   bio: {
     type: String,
-    optional: true
+    optional: true,
   },
   currencyCode: {
     type: String,
-    optional: true
+    optional: true,
   },
   firstName: {
     type: String,
-    optional: true
+    optional: true,
+  },
+  isDeleted: {
+    type: Boolean,
+    optional: true,
+  },
+  isActive: {
+    type: Boolean,
+    optional: true,
   },
   language: {
     type: String,
-    optional: true
+    optional: true,
   },
   lastName: {
     type: String,
-    optional: true
+    optional: true,
   },
+
   name: {
     type: String,
-    optional: true
+    optional: true,
   },
   note: {
     type: String,
-    optional: true
+    optional: true,
   },
   picture: {
     type: String,
-    optional: true
+    optional: true,
   },
   username: {
     type: String,
-    optional: true
-  }
+    optional: true,
+  },
 });
 
 /**
@@ -62,37 +71,54 @@ const inputSchema = new SimpleSchema({
  */
 export default async function updateAccount(context, input) {
   inputSchema.validate(input);
-  const { appEvents, collections, accountId: accountIdFromContext, userId } = context;
+  const {
+    appEvents,
+    collections,
+    accountId: accountIdFromContext,
+    userId,
+  } = context;
   const { Accounts } = collections;
   const {
     accountId: providedAccountId,
     bio,
     currencyCode,
     firstName,
+    isDeleted,
+    isActive,
     language,
     lastName,
     name,
     note,
     picture,
-    username
+    username,
   } = input;
-
+  console.log("input ", input);
   const accountId = providedAccountId || accountIdFromContext;
   if (!accountId) throw new ReactionError("access-denied", "Access Denied");
 
-  const account = await Accounts.findOne({ _id: accountId }, { projection: { userId: 1 } });
+  const account = await Accounts.findOne(
+    { _id: accountId },
+    { projection: { userId: 1 } }
+  );
   if (!account) throw new ReactionError("not-found", "No account found");
 
-  await context.validatePermissions(`reaction:legacy:accounts:${accountId}`, "update", {
-    owner: account.userId
-  });
+  await context.validatePermissions(
+    `reaction:legacy:accounts:${accountId}`,
+    "update",
+    {
+      owner: account.userId,
+    }
+  );
 
   const updates = {};
   const updatedFields = [];
 
   if (typeof currencyCode === "string" || currencyCode === null) {
     if (currencyCode !== null && !CurrencyDefinitions[currencyCode]) {
-      throw new ReactionError("invalid-argument", `No currency has code "${currencyCode}"`);
+      throw new ReactionError(
+        "invalid-argument",
+        `No currency has code "${currencyCode}"`
+      );
     }
 
     updates["profile.currency"] = currencyCode;
@@ -103,7 +129,14 @@ export default async function updateAccount(context, input) {
     updates["profile.firstName"] = firstName;
     updatedFields.push("firstName");
   }
-
+  if (isDeleted != null || isDeleted != undefined) {
+    updates["isDeleted"] = isDeleted;
+    updatedFields.push("isDeleted");
+  }
+  if (isActive != null || isActive != undefined) {
+    updates["isActive"] = isActive;
+    updatedFields.push("isActive");
+  }
   if (typeof lastName === "string" || lastName === null) {
     updates["profile.lastName"] = lastName;
     updatedFields.push("lastName");
@@ -142,30 +175,38 @@ export default async function updateAccount(context, input) {
     updates["profile.username"] = username;
     updatedFields.push("username");
   }
-
+  console.log("updates ", updates);
+  console.log("updatedFields ", updatedFields);
   if (updatedFields.length === 0) {
-    throw new ReactionError("invalid-argument", "At least one field to update is required");
+    throw new ReactionError(
+      "invalid-argument",
+      "At least one field to update is required"
+    );
   }
 
   const modifier = {
     $set: {
       ...updates,
-      updatedAt: new Date()
-    }
+      updatedAt: new Date(),
+    },
   };
 
   Account.validate(modifier, { modifier: true });
 
-  const { value: updatedAccount } = await Accounts.findOneAndUpdate({
-    _id: accountId
-  }, modifier, {
-    returnOriginal: false
-  });
+  const { value: updatedAccount } = await Accounts.findOneAndUpdate(
+    {
+      _id: accountId,
+    },
+    modifier,
+    {
+      returnOriginal: false,
+    }
+  );
 
   await appEvents.emit("afterAccountUpdate", {
     account: updatedAccount,
     updatedBy: userId,
-    updatedFields
+    updatedFields,
   });
 
   return updatedAccount;

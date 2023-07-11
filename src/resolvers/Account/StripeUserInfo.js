@@ -7,18 +7,18 @@ export default async function StripeUserInfo(account, connectionArgs, context) {
     customerId: account._id,
   });
   if (StripeSubscriptionResponse) {
-    console.log(
-      "StripeSubscriptionResponse ",
-      StripeSubscriptionResponse.priceId
-    );
+    // console.log(
+    //   "StripeSubscriptionResponse ",
+    //   StripeSubscriptionResponse.priceId
+    // );
     var StripePlansResponse = await StripePlans.findOne({
       planId: StripeSubscriptionResponse.priceId,
     });
-    console.log("StripePlansResponse ", StripePlansResponse);
+    // console.log("StripePlansResponse ", StripePlansResponse);
     var StripeProductsResponse = await StripeProducts.findOne({
       priceId: StripeSubscriptionResponse.priceId,
     });
-    console.log("StripeProductsResponse ", StripeProductsResponse);
+    // console.log("StripeProductsResponse ", StripeProductsResponse);
     return {
       amount: StripePlansResponse?.unit_amount,
       planName: StripeProductsResponse?.planName,

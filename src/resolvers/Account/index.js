@@ -15,6 +15,8 @@ export default {
     getCurrencyDefinitionByCode(account.profile && account.profile.currency),
   emailRecords: (account) => account.emails,
   firstName: (account) => account.profile.firstName,
+  isDeleted: (account) => account.isDeleted,
+  isActive: (account) => account.isActive,
   groups,
   phone: (account) => account.profile.phone,
   lastName: (account) => account.profile.lastName,

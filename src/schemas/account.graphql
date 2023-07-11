@@ -56,6 +56,10 @@ input CreateAccountInput {
 
   "An optional string identifying the mutation call, which will be returned in the response payload"
   clientMutationId: String
+
+  isActive: Boolean
+
+  isDeleted: Boolean
 }
 
 "Describes changes that should be applied to one of the addresses for an account"
@@ -131,6 +135,10 @@ input UpdateAccountInput {
 
   "Username"
   username: String
+
+  isDeleted: Boolean
+
+  isActive: Boolean
 }
 
 "Defines a new Email and the account to which it should be added"
@@ -221,6 +229,9 @@ type Account implements Node {
   "The first name of the person this account represents, if known"
   firstName: String
 
+  isDeleted: Boolean
+
+  isActive: Boolean
   "The preferred language used by this account"
   language: String
 
@@ -303,6 +314,10 @@ type BasicAccount implements Node {
 
   "List of shop Ids"
   adminUIShopIds: [String]
+
+  isDeleted: Boolean
+
+  isActive: Boolean
 }
 
 type Profile {
