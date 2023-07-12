@@ -17,6 +17,7 @@ export default async function accounts(context, input) {
   await context.validatePermissions("reaction:legacy:accounts", "read");
 
   const selector = {};
+  selector.isDeleted = false;
   if (groupIds && notInAnyGroups) {
     selector.$or = [
       {
