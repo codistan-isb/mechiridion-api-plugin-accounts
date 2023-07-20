@@ -276,6 +276,7 @@ type StripeUserInfo {
   active: Boolean
   currency: String
   subscriptionDate: DateTime
+  stripeUserData:JSON
 }
 
 "Represents a single user partial account"
